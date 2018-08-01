@@ -1,0 +1,52 @@
+{
+  "name": "pangea",
+  "description": "translate images of text",
+  "author": "YerkoPalma",
+  "version": "0.1.0",
+  "main": "index.js",
+  "private": true,
+  "files": [
+    "index.js"
+  ],
+  "env": {
+    "FILE_LIST": [
+      "/",
+      "/bundle.js",
+      "/bundle.css"
+    ]
+  },
+  "scripts": {
+    "test": "standard --verbose | snazzy && npm run deps",
+    "gen": "choo-scaffold",
+    "deps": "dependency-check .",
+    "start": "budo index.js:bundle.js -H 0.0.0.0 -p 8080 -- -t brfs -t sheetify -p [ css-extract -o bundle.css ]",
+    "build": "npm run build:static && npm run build:sw && npm run build:js",
+    "build:static": "mkdir -p dist && cp favicon.ico index.html manifest.json dist && cp -R assets/* dist",
+    "build:js": "browserify -p tinyify -t brfs -t sheetify -p [ css-extract -o dist/bundle.css ] -e index.js -o dist/bundle.js",
+    "build:sw": "browserify -p tinyify -e sw.js -o dist/sw.js",
+    "deploy": "npm run build && touch dist/.nojekyll && gh-pages -d dist -a -t"
+  },
+  "repository": "YerkoPalma/pangea",
+  "license": "MIT",
+  "dependencies": {
+    "choo": "^6.13.0",
+    "choo-service-worker": "^2.4.0",
+    "sheetify": "^7.3.3",
+    "tachyons": "^4.11.1",
+    "tesseract.js": "^1.0.10"
+  },
+  "devDependencies": {
+    "brfs": "^2.0.0",
+    "browserify": "^16.2.2",
+    "budo": "^11.3.2",
+    "choo-devtools": "^2.5.1",
+    "choo-scaffold": "^1.2.0",
+    "css-extract": "^1.3.0",
+    "dependency-check": "^3.2.0",
+    "dotenv": "^6.0.0",
+    "gh-pages": "^1.2.0",
+    "snazzy": "^7.1.1",
+    "standard": "^11.0.1",
+    "tinyify": "^2.4.3"
+  }
+}
