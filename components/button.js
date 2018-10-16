@@ -26,6 +26,23 @@ class Button extends Component {
     var file = event.target.files[0]
     var reader = new FileReader()
     reader.readAsDataURL(file)
+
+    var filename = file.name;
+    if (filename.indexOf('-') > -1) {
+        var nameWithoutExt = filename.substring(0, filename.indexOf('.'))
+        var splittedName = nameWithoutExt.split("-");
+        
+        // if there are more than one dash then splittedName will return more than one word
+        // so this variable will get the language, which is the last element of the array.
+        var suffixLang = splittedName[splittedName.length - 1]
+
+        if (suffixLang in self.state.components.config.langs) {
+          self.state.currentLanguage = suffixLang
+          document.getElementById("input-lang").value = suffixLang
+        }
+    }
+
+
     reader.onload = function (e) {
       self.state.src = e.target.result
       self.cache(Image, 'image').render(self.state, self.emit)
